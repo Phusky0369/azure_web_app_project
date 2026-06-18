@@ -56,45 +56,4 @@
 </head>
 <body>
 
-<div class="container">
-    <h2>sqrt</h2>
-    <input type="number" id="numInput" placeholder="Enter a number">
-    <button onclick="analyze()">Calculate</button>
-    <div id="result">Waiting for input...</div>
-</div>
-
-<script>
-    async function analyze() {
-        const num = document.getElementById('numInput').value;
-        const resultDiv = document.getElementById('result');
-        
-        if (!num) {
-            resultDiv.innerText = "Please enter a number!";
-            return;
-        }
-
-        resultDiv.innerText = "Analyzing...";
-
-        // REPLACE this with your actual Function App URL
-        const functionUrl = "https://YOUR_FUNCTION_APP_NAME.azurewebsites.net/api/CalculateMath";
-
-        try {
-            const response = await fetch(functionUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ number: num })
-            });
-            
-            if (!response.ok) throw new Error('Backend error');
-            
-            const data = await response.json();
-            resultDiv.innerHTML = `<strong>Square Root:</strong> ${data.sqrt.toFixed(2)}<br>
-                                   <strong>Divisors:</strong> ${data.divisors.join(', ')}`;
-        } catch (error) {
-            resultDiv.innerText = "Error: Ensure CORS is enabled on your Function App.";
-        }
-    }
-</script>
-
-</body>
-</html>
+<div class="
