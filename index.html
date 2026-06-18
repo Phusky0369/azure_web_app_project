@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Number Analyzer</title>
+    <title>Divisor Calculator</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -17,39 +17,50 @@
         .container {
             background: white;
             padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
             text-align: center;
-            width: 300px;
+            width: 350px;
         }
+        h2 { color: #333; }
         input {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            border: 2px solid #eee;
+            border-radius: 6px;
             box-sizing: border-box;
+            font-size: 16px;
         }
         button {
             width: 100%;
-            padding: 10px;
-            background-color: #007bff;
+            padding: 12px;
+            background-color: #28a745;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
         }
-        button:hover { background-color: #0056b3; }
-        #result { margin-top: 20px; font-weight: bold; }
+        button:hover { background-color: #218838; }
+        #result { 
+            margin-top: 20px; 
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 6px;
+            text-align: left;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Number Analyzer</h2>
+    <h2>sqrt</h2>
     <input type="number" id="numInput" placeholder="Enter a number">
-    <button onclick="analyze()">Analyze</button>
-    <div id="result"></div>
+    <button onclick="analyze()">Calculate</button>
+    <div id="result">Waiting for input...</div>
 </div>
 
 <script>
@@ -62,7 +73,26 @@
             return;
         }
 
-        resultDiv.innerText = "Calculating..."; 
+        resultDiv.innerText = "Analyzing...";
+
+        // REPLACE this with your actual Function App URL
+        const functionUrl = "https://YOUR_FUNCTION_APP_NAME.azurewebsites.net/api/CalculateMath";
+
+        try {
+            const response = await fetch(functionUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ number: num })
+            });
+            
+            if (!response.ok) throw new Error('Backend error');
+            
+            const data = await response.json();
+            resultDiv.innerHTML = `<strong>Square Root:</strong> ${data.sqrt.toFixed(2)}<br>
+                                   <strong>Divisors:</strong> ${data.divisors.join(', ')}`;
+        } catch (error) {
+            resultDiv.innerText = "Error: Ensure CORS is enabled on your Function App.";
+        }
     }
 </script>
 
